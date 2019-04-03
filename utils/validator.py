@@ -1,20 +1,19 @@
 from utils.response_builder import ResponseCode, ResponseMsg
-
-REQUIRED_ARGUMENTS = ['name', 'id_card', 'mobile']
-
 import re
 import datetime
 import json
 
-with open("id_card_addr_data.json", 'r', encoding='utf-8') as load_f:
+with open("./datasource/id_card_addr_data.json", 'r', encoding='utf-8') as load_f:
     area_dict = json.load(load_f)
+
+REQUIRED_ARGUMENTS = ['name', 'id_card', 'mobile']
 
 
 def validate_id_card(id_card):
     """
     验证身份证是否合法
     :param id_card:  身份证号码
-    :return:
+    :return: true合法
     """
     id_code_list = [7, 9, 10, 5, 8, 4, 2, 1, 6, 3, 7, 9, 10, 5, 8, 4, 2]
     check_code_list = [1, 0, 'X', 9, 8, 7, 6, 5, 4, 3, 2]
@@ -40,8 +39,8 @@ def validate_id_card(id_card):
 def validate_mobile(mobile):
     """
     验证手机号
-    :param mobile:
-    :return:
+    :param mobile: 手机号
+    :return: true合法
     """
     ret = re.match(r'^(13\d|14[5|7]|15\d|166|17[3|6|7]|18\d)\d{8}$', mobile)
     if ret:
@@ -51,6 +50,12 @@ def validate_mobile(mobile):
 
 
 def validate_arguments(api, args):
+    """
+    验证api的参数是否合法
+    :param api: str表示的api
+    :param args: 参数字典
+    :return: true合法 or false
+    """
     for req_arg in REQUIRED_ARGUMENTS:
         if req_arg not in args:
             return False, (ResponseCode.MISSING_REQUIRED_ARGUMENT, ResponseMsg.MISSING_REQUIRED_ARGUMENT)
